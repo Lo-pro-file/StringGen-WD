@@ -52,10 +52,7 @@ async def main(_, msg):
 
 
 async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bool = False):
-    if telethon:
-        ty = "ᴛᴇʟᴇᴛʜᴏɴ"
-    else:
-        ty = "ᴩʏʀᴏɢʀᴀᴍ"
+    ty = "ᴛᴇʟᴇᴛʜᴏɴ" if telethon else "ᴩʏʀᴏɢʀᴀᴍ"
     if is_bot:
         ty += " ʙᴏᴛ"
     await msg.reply(f"» ᴛʀʏɪɴɢ ᴛᴏ sᴛᴀʀᴛ **{ty}** sᴇssɪᴏɴ ɢᴇɴᴇʀᴀᴛᴏʀ...")
@@ -76,10 +73,11 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         if await cancelled(api_hash_msg):
             return
         api_hash = api_hash_msg.text
-    if not is_bot:
-        t = "» ᴩʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ **ᴩʜᴏɴᴇ_ɴᴜᴍʙᴇʀ** ᴡɪᴛʜ ᴄᴏᴜɴᴛʀʏ ᴄᴏᴅᴇ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇɴᴇʀᴀᴛᴇ sᴇssɪᴏɴ. \nᴇxᴀᴍᴩʟᴇ : `+910000000000`'"
-    else:
-        t = "ᴩʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ **ʙᴏᴛ_ᴛᴏᴋᴇɴ** ᴛᴏ ᴄᴏɴᴛɪɴᴜᴇ.\nᴇxᴀᴍᴩʟᴇ : `5314655134:abcdhamzavibes`'"
+    t = (
+        "ᴩʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ **ʙᴏᴛ_ᴛᴏᴋᴇɴ** ᴛᴏ ᴄᴏɴᴛɪɴᴜᴇ.\nᴇxᴀᴍᴩʟᴇ : `5314655134:abcdhamzavibes`'"
+        if is_bot
+        else "» ᴩʟᴇᴀsᴇ sᴇɴᴅ ʏᴏᴜʀ **ᴩʜᴏɴᴇ_ɴᴜᴍʙᴇʀ** ᴡɪᴛʜ ᴄᴏᴜɴᴛʀʏ ᴄᴏᴅᴇ ғᴏʀ ᴡʜɪᴄʜ ʏᴏᴜ ᴡᴀɴᴛ ᴛᴏ ɢᴇɴᴇʀᴀᴛᴇ sᴇssɪᴏɴ. \nᴇxᴀᴍᴩʟᴇ : `+910000000000`'"
+    )
     phone_number_msg = await bot.ask(user_id, t, filters=filters.text)
     if await cancelled(phone_number_msg):
         return
@@ -88,9 +86,7 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
         await msg.reply("» ᴛʀʏɪɴɢ ᴛᴏ sᴇɴᴅ ᴏᴛᴩ ᴀᴛ ᴛʜᴇ ɢɪᴠᴇɴ ɴᴜᴍʙᴇʀ...")
     else:
         await msg.reply("» ᴛʀʏɪɴɢ ᴛᴏ ʟᴏɢɪɴ ᴠɪᴀ ʙᴏᴛ ᴛᴏᴋᴇɴ...")
-    if telethon and is_bot:
-        client = TelegramClient(StringSession(), api_id, api_hash)
-    elif telethon:
+    if telethon and is_bot or telethon:
         client = TelegramClient(StringSession(), api_id, api_hash)
     elif is_bot:
         client = Client(name="bot", api_id=api_id, api_hash=api_hash, bot_token=phone_number, in_memory=True)
@@ -149,11 +145,10 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
             except (PasswordHashInvalid, PasswordHashInvalidError):
                 await two_step_msg.reply("» ᴛʜᴇ ᴩᴀssᴡᴏʀᴅ ʏᴏᴜ'ᴠᴇ sᴇɴᴛ ɪs ᴡʀᴏɴɢ.\n\nᴩʟᴇᴀsᴇ sᴛᴀʀᴛ ɢᴇɴᴇʀᴀᴛɪɴɢ ʏᴏᴜʀ sᴇssɪᴏɴ ᴀɢᴀɪɴ.", quote=True, reply_markup=InlineKeyboardMarkup(gen_button))
                 return
+    elif telethon:
+        await client.start(bot_token=phone_number)
     else:
-        if telethon:
-            await client.start(bot_token=phone_number)
-        else:
-            await client.sign_in_bot(phone_number)
+        await client.sign_in_bot(phone_number)
     if telethon:
         string_session = client.session.save()
     else:
@@ -167,7 +162,10 @@ async def generate_session(bot: Client, msg: Message, telethon=False, is_bot: bo
     except KeyError:
         pass
     await client.disconnect()
-    await bot.send_message(msg.chat.id, "» sᴜᴄᴄᴇssғᴜʟʟʏ ɢᴇɴᴇʀᴀᴛᴇᴅ ʏᴏᴜʀ {} sᴛʀɪɴɢ sᴇssɪᴏɴ.\n\nᴩʟᴇᴀsᴇ ᴄʜᴇᴄᴋ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ᴛᴏ ɢᴇᴛ ɪᴛ ! \n\n**ᴀ sᴛʀɪɴɢ ɢᴇɴᴇʀᴀᴛᴏʀ ʙᴏᴛ ʙʏ** @Opleech 🥺".format("ᴛᴇʟᴇᴛʜᴏɴ" if telethon else "ᴩʏʀᴏɢʀᴀᴍ"))
+    await bot.send_message(
+        msg.chat.id,
+        f'» sᴜᴄᴄᴇssғᴜʟʟʏ ɢᴇɴᴇʀᴀᴛᴇᴅ ʏᴏᴜʀ {"ᴛᴇʟᴇᴛʜᴏɴ" if telethon else "ᴩʏʀᴏɢʀᴀᴍ"} sᴛʀɪɴɢ sᴇssɪᴏɴ.\n\nᴩʟᴇᴀsᴇ ᴄʜᴇᴄᴋ ʏᴏᴜʀ sᴀᴠᴇᴅ ᴍᴇssᴀɢᴇs ᴛᴏ ɢᴇᴛ ɪᴛ ! \n\n**ᴀ sᴛʀɪɴɢ ɢᴇɴᴇʀᴀᴛᴏʀ ʙᴏᴛ ʙʏ** @Opleech 🥺',
+    )
 
 
 async def cancelled(msg):
