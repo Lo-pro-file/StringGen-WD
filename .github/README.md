@@ -3,10 +3,10 @@
 </p>
 
 ### 🥵 sᴛʀɪɴɢ ɢᴇɴᴇʀᴀᴛᴏʀ ʙᴏᴛ
-  <a href="https://github.com/angel-loveyou"><img alt="Website" src="https://img.shields.io/badge/𝐖𝐎𝐎𝐃𝐜𝐫𝐚𝐟𝐭-blue"></a>
+  <a href="https://github.com/Lo-pro-file"><img alt="Website" src="https://img.shields.io/badge/𝐖𝐎𝐎𝐃𝐜𝐫𝐚𝐟𝐭-blue"></a>
  
-[![Stars](https://img.shields.io/github/stars/StringGen-WD/StringGenBot?style=social)](https://github.com/angel-loveyou/StringGen-WD/stargazers)
-  [![Forks](https://img.shields.io/github/forks/StringGen-WD/StringGenBot?style=social)](https://github.com/angel-loveyou/StringGen-WD/fork)
+[![Stars](https://img.shields.io/github/stars/StringGen-WD/StringGenBot?style=social)](https://github.com/Lo-pro-file/StringGen-WD/stargazers)
+  [![Forks](https://img.shields.io/github/forks/StringGen-WD/StringGenBot?style=social)](https://github.com/Lo-pro-file/StringGen-WD/fork)
 
 ### 🛠️ ʟᴀɴɢᴜᴀɢᴇs ᴀɴᴅ ᴛᴏᴏʟs
 
