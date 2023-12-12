@@ -1,4 +1,4 @@
-motor==3.1.2
+motor==3.3.2
 psutil==5.9.6
 pyromod==3.1.6
 pyrogram==2.0.106
